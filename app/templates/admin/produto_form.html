@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar' if id_produto else 'Novo' }} cupcake · Administração{% endblock %}
+{% block conteudo %}
+<section class="caixa-form">
+  <h1>{{ 'Editar cupcake' if id_produto else 'Novo cupcake' }}</h1>
+  <form method="post" novalidate data-validar>
+    <label for="nome">Nome *</label>
+    <input id="nome" name="nome" value="{{ produto.nome or '' }}" required minlength="3">
+    <label for="id_categoria">Categoria *</label>
+    <select id="id_categoria" name="id_categoria" required>
+      <option value="">Escolha...</option>
+      {% for c in categorias %}
+        <option value="{{ c.id_categoria }}" {% if (produto.id_categoria or '')|string == c.id_categoria|string %}selected{% endif %}>{{ c.nome }}</option>
+      {% endfor %}
+    </select>
+    <label for="descricao">Descrição</label>
+    <input id="descricao" name="descricao" value="{{ produto.descricao or '' }}" maxlength="300">
+    <div class="duas">
+      <div><label for="preco">Preço (R$) *</label>
+        <input id="preco" name="preco" type="number" step="0.01" min="0.01" value="{{ produto.preco or '' }}" required></div>
+      <div><label for="estoque">Estoque *</label>
+        <input id="estoque" name="estoque" type="number" min="0" value="{{ produto.estoque if produto.estoque is not none and produto.estoque is defined else 0 }}" required></div>
+    </div>
+    <label for="imagem">Ícone (emoji)</label>
+    <input id="imagem" name="imagem" value="{{ produto.imagem or '🧁' }}" maxlength="4">
+    <label class="opcao"><input type="checkbox" name="ativo" value="1" {% if produto.ativo %}checked{% endif %}> Mostrar na vitrine</label>
+    <button class="botao botao-cheio" type="submit">Salvar</button>
+    <a href="{{ url_for('admin.produtos') }}">Cancelar</a>
+  </form>
+</section>
+{% endblock %}

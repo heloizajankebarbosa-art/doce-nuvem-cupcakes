@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Pedido #{{ pedido.id_pedido }} · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<h1>Pedido #{{ pedido.id_pedido }}</h1>
+<p class="subtitulo">Feito em {{ pedido.data_pedido | data }} · {{ 'Entrega em casa' if pedido.tipo_entrega == 'entrega' else 'Retirada na loja' }}</p>
+
+{% if pedido.status == 'Cancelado' %}
+  <p class="alerta alerta-erro">Este pedido foi cancelado.</p>
+{% else %}
+  <ol class="linha-status" aria-label="Andamento do pedido">
+    {% set atual = fluxo.index(pedido.status) %}
+    {% for s in fluxo %}
+      <li class="{% if loop.index0 < atual %}feito{% elif loop.index0 == atual %}atual{% endif %}"
+          {% if loop.index0 == atual %}aria-current="step"{% endif %}>{{ s }}</li>
+    {% endfor %}
+  </ol>
+{% endif %}
+
+<div class="colunas">
+  <section class="caixa-form largo">
+    <h2>Itens</h2>
+    <ul class="lista-itens">
+      {% for i in itens %}
+        <li><span><span aria-hidden="true">{{ i.imagem }}</span> {{ i.quantidade }}× {{ i.nome }}</span>
+          <span>{{ (i.preco_unitario * i.quantidade) | moeda }}</span></li>
+      {% endfor %}
+    </ul>
+    {% if pedido.endereco_entrega %}<p><strong>Endereço:</strong> {{ pedido.endereco_entrega }}</p>{% endif %}
+    {% if pedido.observacao %}<p><strong>Observação:</strong> {{ pedido.observacao }}</p>{% endif %}
+  </section>
+  <aside class="resumo-pedido">
+    <h2>Pagamento</h2>
+    <p>Forma <span>{{ formas[pedido.forma] }}{% if pedido.final_cartao %} final {{ pedido.final_cartao }}{% endif %}</span></p>
+    <p>Situação <span class="selo selo-{{ pedido.status_pagamento | lower }}">{{ pedido.status_pagamento }}</span></p>
+    <p>Subtotal <span>{{ pedido.subtotal | moeda }}</span></p>
+    <p>Entrega <span>{{ pedido.taxa_entrega | moeda }}</span></p>
+    <p class="total">Total <span>{{ pedido.total | moeda }}</span></p>
+    {% if pedido.status == 'Recebido' and g.usuario.id_usuario == pedido.id_usuario %}
+      <form method="post" action="{{ url_for('pedido.cancelar', id_pedido=pedido.id_pedido) }}"
+            data-confirmar="Tem certeza que quer cancelar este pedido?">
+        <button class="botao botao-perigo botao-cheio" type="submit">Cancelar pedido</button>
+      </form>
+    {% endif %}
+  </aside>
+</div>
+<p><a href="{{ url_for('pedido.meus') if g.usuario.perfil != 'admin' else url_for('admin.pedidos') }}">← Voltar para os pedidos</a></p>
+{% endblock %}

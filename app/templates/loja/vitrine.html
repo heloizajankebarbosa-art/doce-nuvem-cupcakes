@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<section class="destaque">
+  <h1>Cupcakes gourmet feitos hoje 🧁</h1>
+  <p>Escolha seus sabores, pague online e receba em casa ou retire na loja.</p>
+</section>
+
+<form class="filtros" method="get" action="{{ url_for('loja.vitrine') }}" role="search">
+  <label for="busca" class="sr-only">Buscar cupcake</label>
+  <input id="busca" type="search" name="busca" value="{{ busca }}" placeholder="Buscar sabor... ex.: chocolate">
+  {% if categoria_atual %}<input type="hidden" name="categoria" value="{{ categoria_atual }}">{% endif %}
+  <button class="botao" type="submit">Buscar</button>
+</form>
+
+<nav class="categorias" aria-label="Categorias">
+  <a href="{{ url_for('loja.vitrine') }}" class="tag {% if not categoria_atual %}ativa{% endif %}">Todos</a>
+  {% for c in categorias %}
+    <a href="{{ url_for('loja.vitrine', categoria=c.id_categoria) }}"
+       class="tag {% if categoria_atual == c.id_categoria %}ativa{% endif %}">{{ c.nome }}</a>
+  {% endfor %}
+</nav>
+
+{% if produtos %}
+<div class="grade">
+  {% for p in produtos %}
+  <article class="cartao-produto">
+    <a href="{{ url_for('loja.detalhe', id_produto=p.id_produto) }}" class="imagem-produto" aria-hidden="true" tabindex="-1">{{ p.imagem }}</a>
+    <div class="info">
+      <span class="categoria">{{ p.categoria }}</span>
+      <h2><a href="{{ url_for('loja.detalhe', id_produto=p.id_produto) }}">{{ p.nome }}</a></h2>
+      <p>{{ p.descricao }}</p>
+      <div class="linha-preco">
+        <strong class="preco">{{ p.preco | moeda }}</strong>
+        {% if p.estoque > 0 %}
+          <form method="post" action="{{ url_for('carrinho.adicionar', id_produto=p.id_produto) }}">
+            <input type="hidden" name="quantidade" value="1">
+            <button class="botao" type="submit">Adicionar</button>
+          </form>
+        {% else %}
+          <span class="esgotado">Esgotado</span>
+        {% endif %}
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+  <div class="vazio">
+    <p>Nenhum cupcake encontrado para “{{ busca }}”.</p>
+    <a class="botao" href="{{ url_for('loja.vitrine') }}">Ver todos os cupcakes</a>
+  </div>
+{% endif %}
+{% endblock %}

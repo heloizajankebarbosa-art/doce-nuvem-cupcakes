@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Erro {{ codigo }} · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<section class="vazio">
+  <p class="codigo-erro" aria-hidden="true">🧁💨</p>
+  <h1>Erro {{ codigo }}</h1>
+  <p>{{ mensagem }}</p>
+  <a class="botao" href="{{ url_for('loja.vitrine') }}">Voltar para a vitrine</a>
+</section>
+{% endblock %}

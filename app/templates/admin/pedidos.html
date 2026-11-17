@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}Pedidos da loja · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<h1>Pedidos da loja</h1>
+<nav class="categorias" aria-label="Filtrar por status">
+  <a href="{{ url_for('admin.pedidos') }}" class="tag {% if not status_atual %}ativa{% endif %}">Todos</a>
+  {% for s in ['Recebido', 'Em preparo', 'Saiu para entrega', 'Pronto para retirada', 'Entregue', 'Cancelado'] %}
+    <a href="{{ url_for('admin.pedidos', status=s) }}" class="tag {% if status_atual == s %}ativa{% endif %}">{{ s }}</a>
+  {% endfor %}
+</nav>
+{% if pedidos %}
+<div class="tabela-rolagem">
+<table class="tabela">
+  <thead><tr><th>Nº</th><th>Cliente</th><th>Tipo</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Ação</th></tr></thead>
+  <tbody>
+  {% for p in pedidos %}
+    <tr>
+      <td><a href="{{ url_for('pedido.detalhe', id_pedido=p.id_pedido) }}">#{{ p.id_pedido }}</a></td>
+      <td>{{ p.cliente }}</td>
+      <td>{{ 'Entrega' if p.tipo_entrega == 'entrega' else 'Retirada' }}</td>
+      <td>{{ p.total | moeda }}</td>
+      <td>{{ formas[p.forma] }} · {{ p.status_pagamento }}</td>
+      <td><span class="selo">{{ p.status }}</span></td>
+      <td>
+        {% set prox = proximo(p) if p.status != 'Cancelado' else None %}
+        {% if prox %}
+          <form method="post" action="{{ url_for('admin.avancar', id_pedido=p.id_pedido) }}">
+            <button class="botao botao-pequeno" type="submit">→ {{ prox }}</button>
+          </form>
+        {% else %}—{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  <div class="vazio"><p>Nenhum pedido {% if status_atual %}com status “{{ status_atual }}”{% endif %}.</p></div>
+{% endif %}
+{% endblock %}

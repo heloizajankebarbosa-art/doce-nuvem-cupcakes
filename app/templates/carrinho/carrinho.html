@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block titulo %}Carrinho · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<h1>Seu carrinho</h1>
+{% if itens %}
+<div class="tabela-rolagem">
+<table class="tabela">
+  <thead><tr><th>Cupcake</th><th>Preço</th><th>Quantidade</th><th>Subtotal</th><th><span class="sr-only">Ações</span></th></tr></thead>
+  <tbody>
+  {% for i in itens %}
+    <tr>
+      <td><span aria-hidden="true">{{ i.produto.imagem }}</span> {{ i.produto.nome }}</td>
+      <td>{{ i.produto.preco | moeda }}</td>
+      <td>
+        <form method="post" action="{{ url_for('carrinho.atualizar', id_produto=i.produto.id_produto) }}" class="form-linha">
+          <label class="sr-only" for="q{{ i.produto.id_produto }}">Quantidade de {{ i.produto.nome }}</label>
+          <input id="q{{ i.produto.id_produto }}" type="number" name="quantidade" value="{{ i.quantidade }}" min="0" max="{{ i.produto.estoque }}" class="qtd">
+          <button class="botao botao-claro botao-pequeno" type="submit">Atualizar</button>
+        </form>
+      </td>
+      <td>{{ i.subtotal | moeda }}</td>
+      <td>
+        <form method="post" action="{{ url_for('carrinho.remover', id_produto=i.produto.id_produto) }}">
+          <button class="link-perigo" type="submit">Remover</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="resumo">
+  <p>Subtotal: <strong>{{ subtotal | moeda }}</strong></p>
+  {% if subtotal < pedido_minimo %}
+    <p class="alerta alerta-aviso">O pedido mínimo é {{ pedido_minimo | moeda }}. Faltam {{ (pedido_minimo - subtotal) | moeda }}.</p>
+    <a class="botao botao-claro" href="{{ url_for('loja.vitrine') }}">Escolher mais cupcakes</a>
+  {% else %}
+    <a class="botao botao-claro" href="{{ url_for('loja.vitrine') }}">Continuar comprando</a>
+    <a class="botao" href="{{ url_for('pedido.checkout') }}">Finalizar pedido</a>
+  {% endif %}
+</div>
+{% else %}
+<div class="vazio">
+  <p>Seu carrinho está vazio.</p>
+  <a class="botao" href="{{ url_for('loja.vitrine') }}">Ver cupcakes</a>
+</div>
+{% endif %}
+{% endblock %}

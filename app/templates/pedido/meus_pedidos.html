@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}Meus pedidos · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<h1>Meus pedidos</h1>
+{% if pedidos %}
+<div class="tabela-rolagem">
+<table class="tabela">
+  <thead><tr><th>Nº</th><th>Data</th><th>Total</th><th>Status</th><th><span class="sr-only">Ações</span></th></tr></thead>
+  <tbody>
+  {% for p in pedidos %}
+    <tr>
+      <td>#{{ p.id_pedido }}</td><td>{{ p.data_pedido | data }}</td><td>{{ p.total | moeda }}</td>
+      <td><span class="selo">{{ p.status }}</span></td>
+      <td><a href="{{ url_for('pedido.detalhe', id_pedido=p.id_pedido) }}">Acompanhar</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="vazio"><p>Você ainda não fez nenhum pedido.</p>
+  <a class="botao" href="{{ url_for('loja.vitrine') }}">Ver cupcakes</a></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block titulo %}Finalizar pedido · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<h1>Finalizar pedido</h1>
+<div class="colunas">
+  <form method="post" class="caixa-form largo" id="form-checkout" novalidate data-validar>
+    <fieldset>
+      <legend>1. Como você quer receber?</legend>
+      {% set tipo = dados.get('tipo_entrega', 'entrega') %}
+      <label class="opcao"><input type="radio" name="tipo_entrega" value="entrega" {% if tipo == 'entrega' %}checked{% endif %}> Entrega em casa (+ {{ taxa | moeda }})</label>
+      <label class="opcao"><input type="radio" name="tipo_entrega" value="retirada" {% if tipo == 'retirada' %}checked{% endif %}> Retirar na loja (grátis)</label>
+      <div id="bloco-endereco">
+        <label for="endereco">Endereço de entrega *</label>
+        <input id="endereco" name="endereco" value="{{ dados.get('endereco', '') }}" placeholder="Rua, número, bairro, cidade">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. Pagamento</legend>
+      {% set forma = dados.get('forma_pagamento', 'pix') %}
+      {% for chave, nome in formas.items() %}
+        <label class="opcao"><input type="radio" name="forma_pagamento" value="{{ chave }}" {% if forma == chave %}checked{% endif %}> {{ nome }}</label>
+      {% endfor %}
+      <div id="bloco-cartao">
+        <label for="numero_cartao">Número do cartão *</label>
+        <input id="numero_cartao" name="numero_cartao" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" autocomplete="cc-number">
+        <div class="duas">
+          <div><label for="validade">Validade *</label>
+            <input id="validade" name="validade" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp"></div>
+          <div><label for="cvv">CVV *</label>
+            <input id="cvv" name="cvv" inputmode="numeric" maxlength="3" placeholder="123" autocomplete="cc-csc"></div>
+        </div>
+        <small>Ambiente de teste: use o cartão 4111 1111 1111 1111, validade futura e qualquer CVV.</small>
+      </div>
+      <p id="info-pix" class="dica">Ao confirmar, o pagamento por PIX é aprovado na hora (simulação).</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>3. Observações</legend>
+      <label for="observacao">Algum recado para a loja? (opcional)</label>
+      <input id="observacao" name="observacao" maxlength="200" value="{{ dados.get('observacao', '') }}" placeholder="Ex.: interfone quebrado, ligar ao chegar">
+    </fieldset>
+    <button class="botao botao-cheio" type="submit">Confirmar pedido</button>
+  </form>
+
+  <aside class="resumo-pedido" aria-label="Resumo do pedido">
+    <h2>Resumo</h2>
+    <ul>
+      {% for i in itens %}<li>{{ i.quantidade }}× {{ i.produto.nome }} <span>{{ i.subtotal | moeda }}</span></li>{% endfor %}
+    </ul>
+    <p>Subtotal <span>{{ subtotal | moeda }}</span></p>
+    <p>Entrega <span id="valor-taxa" data-taxa="{{ taxa }}">{{ taxa | moeda }}</span></p>
+    <p class="total">Total <span id="valor-total" data-subtotal="{{ subtotal }}">{{ (subtotal + taxa) | moeda }}</span></p>
+  </aside>
+</div>
+{% endblock %}

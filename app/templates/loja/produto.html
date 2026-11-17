@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block titulo %}{{ produto.nome }} · Doce Nuvem{% endblock %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ url_for('loja.vitrine') }}">Vitrine</a> › {{ produto.categoria }} › {{ produto.nome }}</p>
+<section class="detalhe-produto">
+  <div class="imagem-grande" aria-hidden="true">{{ produto.imagem }}</div>
+  <div>
+    <span class="categoria">{{ produto.categoria }}</span>
+    <h1>{{ produto.nome }}</h1>
+    <p>{{ produto.descricao }}</p>
+    <p class="preco grande">{{ produto.preco | moeda }}</p>
+    {% if produto.estoque > 0 %}
+      <p class="estoque">{{ produto.estoque }} disponíveis hoje</p>
+      <form method="post" action="{{ url_for('carrinho.adicionar', id_produto=produto.id_produto) }}" class="form-linha">
+        <label for="quantidade">Quantidade</label>
+        <input id="quantidade" type="number" name="quantidade" value="1" min="1" max="{{ produto.estoque }}" required>
+        <button class="botao" type="submit">Adicionar ao carrinho</button>
+      </form>
+    {% else %}
+      <p class="esgotado">Esgotado no momento. Volte amanhã!</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
