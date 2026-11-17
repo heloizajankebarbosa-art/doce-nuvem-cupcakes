@@ -17,6 +17,34 @@
     b.addEventListener("click", () => b.closest(".alerta").remove())
   );
 
+  // FB-03: ao voltar para um cupcake da vitrine (#produto-N), a mensagem aparece flutuando
+  // na tela, para a pessoa ver o aviso sem precisar subir a página
+  const avisos = document.querySelector(".mensagens");
+  if (avisos && /^#produto-\d+$/.test(window.location.hash)) {
+    avisos.classList.add("flutuante");
+    setTimeout(() => avisos.classList.add("sumindo"), 3500);
+    setTimeout(() => avisos.remove(), 4000);
+  }
+
+  // FB-04: botões − e + para escolher a quantidade antes de adicionar ao carrinho
+  document.querySelectorAll("[data-seletor]").forEach((seletor) => {
+    const campo = seletor.querySelector("input");
+    const menos = seletor.querySelector("[data-menos]");
+    const mais = seletor.querySelector("[data-mais]");
+    const min = parseInt(campo.min || "1", 10);
+    const max = parseInt(campo.max || "99", 10);
+    function ajustar(valor) {
+      const n = Math.min(max, Math.max(min, parseInt(valor, 10) || min));
+      campo.value = n;
+      menos.disabled = n <= min;
+      mais.disabled = n >= max;
+    }
+    menos.addEventListener("click", () => ajustar(parseInt(campo.value, 10) - 1));
+    mais.addEventListener("click", () => ajustar(parseInt(campo.value, 10) + 1));
+    campo.addEventListener("change", () => ajustar(campo.value));
+    ajustar(campo.value);
+  });
+
   // Confirmação antes de ações que não têm volta (ex.: cancelar pedido)
   document.querySelectorAll("form[data-confirmar]").forEach((form) =>
     form.addEventListener("submit", (e) => {

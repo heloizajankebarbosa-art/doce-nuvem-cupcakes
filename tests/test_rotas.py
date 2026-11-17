@@ -96,3 +96,34 @@ def test_admin_cadastra_produto_invalido(client):
     resp = client.post("/admin/produtos/novo", data={"nome": "X", "preco": "0", "estoque": "1",
                                                      "id_categoria": "1"})
     assert resp.status_code == 400 and "maior que zero" in texto(resp)
+
+
+def test_adicionar_volta_para_o_mesmo_cupcake(client):
+    """FB-03: depois de adicionar, a página volta para o cupcake, e não para o topo."""
+    resp = client.post("/carrinho/adicionar/7", data={"quantidade": 1, "ancora": "produto-7"},
+                       headers={"Referer": "http://localhost/?categoria=3"})
+    assert resp.status_code == 302
+    assert resp.headers["Location"].endswith("/?categoria=3#produto-7")
+    assert 'id="produto-7"' in texto(client.get("/"))
+
+
+def test_ancora_invalida_e_ignorada(client):
+    resp = client.post("/carrinho/adicionar/7", data={"quantidade": 1, "ancora": "javascript:alert(1)"},
+                       headers={"Referer": "http://localhost/"})
+    assert "#" not in resp.headers["Location"]
+
+
+def test_vitrine_tem_seletor_de_quantidade(client):
+    """FB-04: a vitrine mostra os botões − e + em cada cupcake disponível."""
+    pagina = texto(client.get("/"))
+    assert pagina.count("data-seletor") == 9          # 10 cupcakes, 1 esgotado
+    assert 'aria-label="Aumentar quantidade de Red Velvet"' in pagina
+
+
+def test_adicionar_varias_unidades_de_uma_vez(client):
+    """FB-04: escolher 2 unidades na vitrine coloca 2 no carrinho."""
+    resp = client.post("/carrinho/adicionar/3", data={"quantidade": 2, "ancora": "produto-3"},
+                       follow_redirects=True)
+    assert "2 cupcakes adicionados ao carrinho" in texto(resp)
+    carrinho = texto(client.get("/carrinho/"))
+    assert 'value="2"' in carrinho and "R$ 20,00" in carrinho

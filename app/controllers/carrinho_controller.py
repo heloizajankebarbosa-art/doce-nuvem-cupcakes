@@ -1,4 +1,6 @@
 """Controller do carrinho de compras."""
+import re
+
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 
 from app.models import carrinho as carrinho_model
@@ -24,10 +26,18 @@ def adicionar(id_produto):
     quantidade = request.form.get("quantidade", 1, type=int) or 1
     try:
         session["carrinho"] = carrinho_model.adicionar(_carrinho(), id_produto, quantidade)
-        flash("Cupcake adicionado ao carrinho! 🧁", "sucesso")
+        if quantidade == 1:
+            flash("Cupcake adicionado ao carrinho! 🧁", "sucesso")
+        else:
+            flash(f"{quantidade} cupcakes adicionados ao carrinho! 🧁", "sucesso")
     except ErroNegocio as e:
         flash(str(e), "erro")
-    return redirect(request.referrer or url_for("loja.vitrine"))
+    destino = request.referrer or url_for("loja.vitrine")
+    # FB-03: volta para o mesmo cupcake na vitrine, em vez de pular para o topo da página
+    ancora = request.form.get("ancora", "")
+    if re.fullmatch(r"produto-\d+", ancora):
+        destino = destino.split("#")[0] + "#" + ancora
+    return redirect(destino)
 
 
 @bp.route("/atualizar/<int:id_produto>", methods=["POST"])

@@ -10,7 +10,7 @@
 | 1:40–2:20 | Cadastro com erro e depois certo | "Se a pessoa erra o cadastro, o sistema mostra o erro embaixo de cada campo. Corrigindo, a conta é criada e ela já entra logada." |
 | 2:20–3:20 | Carrinho → mínimo → checkout → cartão errado → cartão certo | "O pedido mínimo é de R$ 20. No checkout, ao escolher retirada o total muda na hora. Se o cartão for inválido o pedido não é criado. Com o cartão de teste, o pedido é confirmado." |
 | 3:20–4:00 | Login admin → avançar status → voltar ao cliente | "A loja entra como administradora, vê os pedidos e avança o status. O cliente acompanha pela linha do tempo." |
-| 4:00–4:30 | Terminal rodando `pytest` | "Fiz 47 testes automatizados com pytest, unitários e de integração, e todos passaram." |
+| 4:00–4:30 | Terminal rodando `pytest` | "Fiz 51 testes automatizados com pytest, unitários e de integração, e todos passaram." |
 | 4:30–5:00 | `04-melhorias-aplicadas.md` | "Cinco colegas testaram o sistema pelo formulário. As principais mudanças a partir do feedback foram: [citar 1 ou 2]. Obrigada!" |
 
 **Dica:** se o vídeo passar de 5 minutos, encurte a parte do código; o mais importante é mostrar o sistema funcionando.

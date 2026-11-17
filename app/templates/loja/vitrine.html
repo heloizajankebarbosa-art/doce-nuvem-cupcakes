@@ -23,7 +23,7 @@
 {% if produtos %}
 <div class="grade">
   {% for p in produtos %}
-  <article class="cartao-produto">
+  <article class="cartao-produto" id="produto-{{ p.id_produto }}">
     <a href="{{ url_for('loja.detalhe', id_produto=p.id_produto) }}" class="imagem-produto" aria-hidden="true" tabindex="-1">{{ p.imagem }}</a>
     <div class="info">
       <span class="categoria">{{ p.categoria }}</span>
@@ -32,8 +32,14 @@
       <div class="linha-preco">
         <strong class="preco">{{ p.preco | moeda }}</strong>
         {% if p.estoque > 0 %}
-          <form method="post" action="{{ url_for('carrinho.adicionar', id_produto=p.id_produto) }}">
-            <input type="hidden" name="quantidade" value="1">
+          <form method="post" action="{{ url_for('carrinho.adicionar', id_produto=p.id_produto) }}" class="form-adicionar">
+            <div class="seletor-qtd" data-seletor>
+              <button type="button" data-menos aria-label="Diminuir quantidade de {{ p.nome }}">−</button>
+              <input type="number" name="quantidade" value="1" min="1" max="{{ p.estoque }}"
+                     inputmode="numeric" aria-label="Quantidade de {{ p.nome }}">
+              <button type="button" data-mais aria-label="Aumentar quantidade de {{ p.nome }}">+</button>
+            </div>
+            <input type="hidden" name="ancora" value="produto-{{ p.id_produto }}">
             <button class="botao" type="submit">Adicionar</button>
           </form>
         {% else %}

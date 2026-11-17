@@ -94,7 +94,7 @@ Em **Cupcakes** você vê todos os produtos, inclusive os que estão fora da vit
 ```
 pytest
 ```
-O resultado esperado é `47 passed`.
+O resultado esperado é `51 passed`.
 
 ## Recriar o banco do zero
 

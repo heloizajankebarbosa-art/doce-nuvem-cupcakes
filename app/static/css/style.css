@@ -68,6 +68,12 @@ h2 { font-size: 1.15rem; }
 .alerta-aviso { background: var(--amarelo-claro); border-color: #c99400; }
 .fechar { background: none; border: 0; font-size: 1.3rem; cursor: pointer; color: inherit; }
 
+/* Aviso flutuante (FB-03): aparece por cima quando a página volta para o cupcake */
+.mensagens.flutuante { position: fixed; top: 72px; left: 50%; transform: translateX(-50%);
+  width: min(560px, calc(100% - 2rem)); z-index: 20; box-shadow: 0 6px 20px rgba(74, 44, 42, .18);
+  border-radius: 10px; transition: opacity .4s; }
+.mensagens.flutuante.sumindo { opacity: 0; }
+
 /* Vitrine */
 .destaque { background: linear-gradient(135deg, var(--rosa-claro), #fff); border-radius: var(--raio); padding: 1.5rem; margin-bottom: 1rem; }
 .destaque h1 { margin: 0 0 .3rem; }
@@ -77,14 +83,24 @@ h2 { font-size: 1.15rem; }
 .tag { padding: .3rem .9rem; border-radius: 99px; background: #fff; border: 1px solid var(--borda); text-decoration: none; color: var(--chocolate); font-size: .95rem; }
 .tag.ativa { background: var(--rosa); color: #fff; border-color: var(--rosa); }
 .grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
-.cartao-produto { background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); overflow: hidden; display: flex; flex-direction: column; }
+.cartao-produto { scroll-margin-top: 90px; background: #fff; border-radius: var(--raio); box-shadow: var(--sombra); overflow: hidden; display: flex; flex-direction: column; }
 .imagem-produto { display: grid; place-items: center; font-size: 4rem; height: 130px; background: var(--rosa-claro); text-decoration: none; }
 .cartao-produto .info { padding: 1rem; display: flex; flex-direction: column; flex: 1; }
 .cartao-produto h2 { margin: .1rem 0 .3rem; }
 .cartao-produto h2 a { color: var(--chocolate); text-decoration: none; }
 .cartao-produto p { color: var(--cinza); font-size: .92rem; flex: 1; margin: 0 0 .8rem; }
 .categoria { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--rosa); font-weight: 700; }
-.linha-preco { display: flex; justify-content: space-between; align-items: center; }
+.linha-preco { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
+/* FB-04: escolher a quantidade antes de adicionar */
+.form-adicionar { display: flex; align-items: center; gap: .5rem; }
+.seletor-qtd { display: inline-flex; align-items: center; border: 1.5px solid var(--borda); border-radius: 99px; background: #fff; }
+.seletor-qtd button { width: 2.1rem; height: 2.1rem; border: 0; background: none; font-size: 1.25rem; line-height: 1;
+  color: var(--rosa); cursor: pointer; border-radius: 99px; font-weight: 700; }
+.seletor-qtd button:hover { background: var(--rosa-claro); }
+.seletor-qtd button:disabled { color: #c9b8b4; cursor: default; background: none; }
+.seletor-qtd input { width: 2.6rem !important; border: 0; padding: .3rem 0; text-align: center; font-weight: 700; background: none;
+  -moz-appearance: textfield; }
+.seletor-qtd input::-webkit-outer-spin-button, .seletor-qtd input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .preco { font-size: 1.15rem; }
 .preco.grande { font-size: 1.8rem; font-weight: 800; margin: .5rem 0; }
 .esgotado { color: var(--vermelho); font-weight: 700; font-size: .9rem; }

@@ -3,7 +3,7 @@
 Loja virtual de cupcakes gourmet com **vitrine, pedido eletrônico, pagamento e entrega**.
 
 Projeto Integrador Transdisciplinar em Engenharia de Software II, Universidade Cruzeiro do Sul.
-**Aluna:** Heloiza Janke Barbosa · **RGM:** 32446748
+**Aluna:** Heloiza ______________ · **RGM:** ______________
 
 ![Vitrine](docs/imagens/01-vitrine.png)
 
@@ -49,7 +49,7 @@ Cartão de teste: `4111 1111 1111 1111`, validade futura, qualquer CVV.
 pytest
 ```
 
-Resultado: **47 testes aprovados** (unitários e de integração).
+Resultado: **51 testes aprovados** (unitários e de integração).
 
 ## Documentação
 

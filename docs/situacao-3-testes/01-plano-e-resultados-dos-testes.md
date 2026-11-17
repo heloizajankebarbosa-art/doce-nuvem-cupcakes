@@ -4,7 +4,7 @@ Seguindo o **Modelo V** do material da disciplina, cada nível de desenvolviment
 
 | Desenvolvimento (verificação) | Teste correspondente (validação) | Como foi feito aqui |
 |---|---|---|
-| Requisitos (histórias US01–US20) | **Teste de aceitação** | Testes feitos por 5 colegas com o formulário ([03-formulario-teste-usuarios.md](03-formulario-teste-usuarios.md)). |
+| Requisitos (histórias US01–US20) | **Teste de aceitação** | Testes feitos por 4 usuários externos, com o roteiro do formulário ([03-formulario-teste-usuarios.md](03-formulario-teste-usuarios.md)). |
 | Análise (casos de uso) | **Teste de sistema** | Roteiro manual de ponta a ponta no navegador (seção 3). |
 | Arquitetura (MVC) | **Teste de integração** | `tests/test_rotas.py`: simula o navegador passando por Controller + Model + View + banco. |
 | Código | **Teste unitário** | `tests/test_models.py`: testa cada regra de negócio isoladamente. |
@@ -38,9 +38,11 @@ A verificação confere se o software foi construído **de acordo com a especifi
 
 ## 2. Testes automatizados (unitários e de integração)
 
-**Ferramenta:** pytest · **Comando:** `pytest` · **Resultado:** ✅ **47 testes, 47 aprovados, 0 falhas**
+**Ferramenta:** pytest · **Comando:** `pytest` · **Resultado:** ✅ **51 testes, 51 aprovados, 0 falhas**
 
 Cada teste roda num banco de dados novo e temporário, então um teste não interfere no outro.
+
+![Execução do pytest](../imagens/17-testes-pytest.png)
 
 ### Unitários – `tests/test_models.py` (35 testes)
 
@@ -52,7 +54,7 @@ Cada teste roda num banco de dados novo e temporário, então um teste não inte
 | TestPagamento | Algoritmo de Luhn, cartão válido, cartão inválido (5 casos), formas de pagamento | 8 | ✅ |
 | TestPedido | Pedido completo, mínimo, endereço, retirada, cartão recusado, fluxo de status, cancelar | 8 | ✅ |
 
-### Integração – `tests/test_rotas.py` (12 testes)
+### Integração – `tests/test_rotas.py` (16 testes)
 
 | Teste | Cenário | Resultado |
 |---|---|---|
@@ -68,6 +70,10 @@ Cada teste roda num banco de dados novo e temporário, então um teste não inte
 | test_cliente_nao_ve_pedido_de_outro | Pedido de outro cliente retorna 404 | ✅ |
 | test_admin_avanca_status | Admin muda o pedido para "Em preparo" | ✅ |
 | test_admin_cadastra_produto_invalido | Preço zero é recusado | ✅ |
+| test_adicionar_volta_para_o_mesmo_cupcake | FB-03: após adicionar, a página volta para o cupcake (não para o topo) | ✅ |
+| test_ancora_invalida_e_ignorada | FB-03: só aceita âncoras no formato `produto-N` (segurança) | ✅ |
+| test_vitrine_tem_seletor_de_quantidade | FB-04: cada cupcake disponível tem os botões − e + | ✅ |
+| test_adicionar_varias_unidades_de_uma_vez | FB-04: escolher 2 unidades na vitrine coloca 2 no carrinho | ✅ |
 
 ## 3. Teste de sistema (manual, no navegador)
 
