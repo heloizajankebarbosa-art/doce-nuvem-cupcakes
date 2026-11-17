@@ -3,7 +3,7 @@
 Loja virtual de cupcakes gourmet com **vitrine, pedido eletrônico, pagamento e entrega**.
 
 Projeto Integrador Transdisciplinar em Engenharia de Software II, Universidade Cruzeiro do Sul.
-**Aluna:** Heloiza ______________ · **RGM:** ______________
+**Aluna:** Heloiza Janke Barbosa · **RGM:** 32446748
 
 ![Vitrine](docs/imagens/01-vitrine.png)
 
